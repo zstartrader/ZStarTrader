@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Z Star Trader | Admin</title><style>
+*{box-sizing:border-box}body{margin:0;background:#080b12;color:#f5f7fb;font:14px Arial,sans-serif}
+header{padding:18px 5%;background:#101622;border-bottom:1px solid #263247;display:flex;justify-content:space-between;align-items:center;gap:12px}
+h1{font-size:20px;margin:0}.wrap{max-width:1100px;margin:30px auto;padding:0 18px}
+.panel{background:#111824;border:1px solid #263247;border-radius:12px;padding:20px;margin-bottom:18px}
+input,select{background:#080d15;color:white;border:1px solid #34445d;border-radius:7px;padding:12px;width:100%;min-width:0}
+button{background:#e52c37;color:white;border:0;border-radius:7px;padding:11px 15px;font-weight:bold;cursor:pointer}
+button.secondary{background:#283449}button.danger{background:#9d2630}button:disabled{opacity:.5}
+.row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:10px;align-items:end}
+.search{display:flex;gap:10px}.search input{flex:1}
+table{width:100%;border-collapse:collapse;margin-top:15px}th,td{text-align:left;padding:12px 8px;border-bottom:1px solid #273246;vertical-align:middle;overflow-wrap:anywhere}
+th{color:#93a2b8;font-size:12px}td small{color:#91a0b5}.actions{display:flex;gap:6px;flex-wrap:wrap}
+#app{display:none}.msg{margin:12px 0;color:#ff9b9b}.status{font-weight:bold}.ACTIVE{color:#3fdb91}.INACTIVE{color:#ff7c87}
+@media(max-width:760px){.row{grid-template-columns:1fr 1fr}.row button{grid-column:1/-1}.table-wrap{overflow:auto}table{min-width:760px}header{padding:15px}}
+</style></head><body>
+<header><h1>Z STAR TRADER — ADMIN</h1><button id="logout" class="secondary" style="display:none">Logout</button></header>
+<div class="wrap">
+<section id="login" class="panel"><h2>Admin Login</h2><p>Enter the admin password from your server .env file.</p>
+<form id="loginForm"><input id="adminPassword" type="password" placeholder="Admin password" required><p><button>Login</button></p></form><div id="loginMsg" class="msg"></div></section>
+<div id="app">
+<section class="panel"><h2 id="formTitle">Add User</h2><form id="userForm"><input type="hidden" id="userId">
+<div class="row"><label>Passkey<input id="passkey" maxlength="18" minlength="18" required placeholder="18-character passkey"></label>
+<label>UID<input id="uid" maxlength="64" required placeholder="User UID"></label>
+<label>Tier<select id="tier"><option value="100">$100</option><option value="300">$300</option><option value="500">$500</option><option value="1000">$1000</option></select></label>
+<label>Status<select id="status"><option>ACTIVE</option><option>INACTIVE</option></select></label>
+<button id="saveBtn">Add User</button></div></form><div id="formMsg" class="msg"></div></section>
+<section class="panel"><h2>Find Users</h2><div class="search"><input id="query" placeholder="Search exact passkey or UID"><button id="searchBtn">Search</button><button id="allBtn" class="secondary">All</button></div>
+<div id="listMsg" class="msg"></div><div class="table-wrap"><table><thead><tr><th>Passkey</th><th>UID</th><th>Tier</th><th>Status</th><th>Actions</th></tr></thead><tbody id="users"></tbody></table></div></section>
+</div></div>
+<script>
+const $=id=>document.getElementById(id);
+async function api(url,options={}){const r=await fetch(url,{credentials:"same-origin",...options,headers:{"Content-Type":"application/json",...(options.headers||{})}});const d=await r.json();if(!r.ok)throw Error(d.message||"Request failed");return d}
+function showApp(on){$("login").style.display=on?"none":"block";$("app").style.display=on?"block":"none";$("logout").style.display=on?"inline-block":"none";if(on)loadUsers()}
+async function check(){try{const d=await api("/api/admin/me");showApp(d.ok)}catch(e){showApp(false)}}
+$("loginForm").onsubmit=async e=>{e.preventDefault();$("loginMsg").textContent="";try{await api("/api/admin/login",{method:"POST",body:JSON.stringify({password:$("adminPassword").value})});$("adminPassword").value="";showApp(true)}catch(e){$("loginMsg").textContent=e.message}};
+$("logout").onclick=async()=>{await api("/api/admin/logout",{method:"POST"});showApp(false)};
+$("userForm").onsubmit=async e=>{e.preventDefault();const id=$("userId").value;const body={passkey:$("passkey").value,uid:$("uid").value,tier:$("tier").value,status:$("status").value};try{await api(id?"/api/admin/users/"+id:"/api/admin/users",{method:id?"PUT":"POST",body:JSON.stringify(body)});$("formMsg").textContent=id?"User updated.":"User added.";resetForm();loadUsers()}catch(e){$("formMsg").textContent=e.message}};
+function resetForm(){$("userForm").reset();$("userId").value="";$("formTitle").textContent="Add User";$("saveBtn").textContent="Add User"}
+function editUser(u){$("userId").value=u.id;$("passkey").value=u.passkey;$("uid").value=u.uid;$("tier").value=u.tier;$("status").value=u.status;$("formTitle").textContent="Update User #"+u.id;$("saveBtn").textContent="Save Update";window.scrollTo({top:0,behavior:"smooth"})}
+async function removeUser(id){if(!confirm("Delete this user permanently?"))return;try{await api("/api/admin/users/"+id,{method:"DELETE"});loadUsers()}catch(e){$("listMsg").textContent=e.message}}
+async function loadUsers(){try{const d=await api("/api/admin/users?q="+encodeURIComponent($("query").value.trim()));$("users").innerHTML=d.users.map(u=>`<tr><td>${esc(u.passkey)}</td><td>${esc(u.uid)}</td><td>$${esc(u.tier)}</td><td class="status ${u.status}">${u.status}</td><td><div class="actions"><button class="secondary" data-edit="${u.id}">Edit</button><button class="danger" data-delete="${u.id}">Delete</button></div></td></tr>`).join("")||'<tr><td colspan="5">No users found.</td></tr>';$("listMsg").textContent=d.users.length+" user(s)"}catch(e){$("listMsg").textContent=e.message}}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+$("users").onclick=e=>{const edit=e.target.dataset.edit,del=e.target.dataset.delete;if(edit||del){api("/api/admin/users?q=").then(d=>{const u=d.users.find(x=>x.id===Number(edit||del));if(edit&&u)editUser(u);if(del)removeUser(del)})}};
+$("searchBtn").onclick=loadUsers;$("query").onkeydown=e=>{if(e.key==="Enter")loadUsers()};$("allBtn").onclick=()=>{$("query").value="";loadUsers()};check();
+</script></body></html>

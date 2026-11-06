@@ -1,0 +1,3072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Z Star Trader</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    min-height:100vh;
+    background:#080b11;
+    color:#fff;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    overflow-x:hidden;
+
+    background-image:
+    linear-gradient(
+        rgba(5,7,12,.90),
+        rgba(5,7,12,.96)
+    ),
+    url("https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=2200&q=85");
+
+    background-size:cover;
+    background-position:center;
+    background-attachment:fixed;
+}
+
+/* ==============================
+   COLORS
+============================== */
+
+:root{
+    --red:#ff2a4b;
+    --red-dark:#d91639;
+    --bg:#080b11;
+    --card:rgba(15,19,28,.94);
+    --border:#222a37;
+    --muted:#8c96a7;
+    --green:#22c55e;
+}
+
+/* ==============================
+   COMMON
+============================== */
+
+.text-accent{
+    color:var(--red);
+}
+
+.card{
+    background:rgba(13,17,25,.94);
+    border:1px solid var(--border);
+    border-radius:18px;
+    box-shadow:0 18px 50px rgba(0,0,0,.25);
+}
+
+button,
+a{
+    -webkit-tap-highlight-color:transparent;
+}
+
+/* ==============================
+   NAVBAR
+============================== */
+
+.navbar{
+    position:sticky;
+    top:0;
+    z-index:9999;
+    width:100%;
+    background:rgba(5,7,12,.88);
+    border-bottom:1px solid rgba(255,255,255,.08);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+}
+
+.nav-inner{
+    width:100%;
+    max-width:1250px;
+    min-height:72px;
+    margin:auto;
+    padding:12px 25px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    color:#fff;
+    text-decoration:none;
+}
+
+.logo-box{
+    width:40px;
+    height:40px;
+    border-radius:10px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:linear-gradient(135deg,#ff1742,#b90028);
+    box-shadow:0 8px 25px rgba(255,42,75,.35);
+
+    font-size:21px;
+    font-weight:900;
+    color:#fff;
+}
+
+.logo-name{
+    font-size:20px;
+    font-weight:900;
+    letter-spacing:.3px;
+}
+
+.nav-links{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:34px;
+    flex:1;
+}
+
+.nav-links a{
+    position:relative;
+    color:#8e98a9;
+    text-decoration:none;
+    font-size:14px;
+    font-weight:600;
+    padding:10px 0;
+    transition:.25s;
+}
+
+.nav-links a:hover,
+.nav-links a.active{
+    color:#fff;
+}
+
+.nav-links a.active{
+    color:var(--red);
+}
+
+.nav-links a.active:after{
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    height:2px;
+    border-radius:10px;
+    background:var(--red);
+}
+
+.nav-actions{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.telegram-contact{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    color:#9ba4b3;
+    text-decoration:none;
+    font-size:13px;
+    transition:.2s;
+}
+
+.telegram-contact:hover{
+    color:#229ED9;
+}
+
+.logout{
+    border:0;
+    background:linear-gradient(135deg,#ff2a4b,#d91639);
+    color:#fff;
+    padding:10px 18px;
+    border-radius:8px;
+    font-size:12px;
+    font-weight:800;
+    cursor:pointer;
+    box-shadow:0 8px 20px rgba(255,42,75,.18);
+    transition:.2s;
+}
+
+.logout:hover{
+    transform:translateY(-1px);
+}
+
+.menu-btn{
+    display:none;
+    width:42px;
+    height:42px;
+    border:1px solid #2b3442;
+    border-radius:9px;
+    background:#111620;
+    color:#fff;
+    font-size:18px;
+    cursor:pointer;
+}
+
+/* ==============================
+   MOBILE MENU
+============================== */
+
+.mobile-menu{
+    display:none;
+    padding:0 16px 16px;
+    background:rgba(5,7,12,.97);
+}
+
+.mobile-menu.show{
+    display:block;
+}
+
+.mobile-menu a{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:14px 10px;
+    border-bottom:1px solid rgba(255,255,255,.06);
+    color:#a4adbb;
+    text-decoration:none;
+    font-size:14px;
+}
+
+.mobile-menu a:hover{
+    color:#fff;
+}
+
+.mobile-menu .mobile-logout{
+    color:var(--red);
+    font-weight:800;
+}
+
+/* ==============================
+   MAIN
+============================== */
+
+.container{
+    width:100%;
+    max-width:1180px;
+    margin:auto;
+    padding:0 20px;
+}
+
+/* ==============================
+   HERO
+============================== */
+
+.hero{
+    position:relative;
+    margin-top:35px;
+    padding:75px 30px;
+    text-align:center;
+    border:1px solid rgba(255,42,75,.2);
+    border-radius:24px;
+    overflow:hidden;
+
+    background:
+    radial-gradient(
+        circle at center,
+        rgba(255,42,75,.12),
+        transparent 55%
+    );
+}
+
+.hero:before{
+    content:"";
+    position:absolute;
+    width:350px;
+    height:350px;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    background:rgba(255,42,75,.07);
+    filter:blur(80px);
+    border-radius:50%;
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+}
+
+.live{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:7px 13px;
+    border:1px solid rgba(255,42,75,.25);
+    border-radius:30px;
+    color:#ff6179;
+    background:rgba(255,42,75,.08);
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:.4px;
+}
+
+.live-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:var(--red);
+    box-shadow:0 0 12px var(--red);
+    animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+    0%,100%{opacity:1}
+    50%{opacity:.35}
+}
+
+.hero h1{
+    max-width:900px;
+    margin:22px auto 18px;
+    font-size:clamp(36px,6vw,68px);
+    line-height:1.05;
+    font-weight:950;
+    letter-spacing:-2px;
+}
+
+.hero p{
+    max-width:650px;
+    margin:auto;
+    color:#929cab;
+    font-size:16px;
+    line-height:1.8;
+}
+
+.hero-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+
+    margin-top:28px;
+    padding:14px 27px;
+
+    background:linear-gradient(135deg,#ff2a4b,#d91639);
+    color:#fff;
+    text-decoration:none;
+
+    border-radius:9px;
+    font-size:14px;
+    font-weight:850;
+
+    box-shadow:0 12px 30px rgba(255,42,75,.25);
+    transition:.25s;
+}
+
+.hero-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 16px 35px rgba(255,42,75,.4);
+}
+
+.dashboard-link{
+    margin-top:15px;
+    color:#717b8b;
+    font-size:12px;
+}
+
+.dashboard-link a{
+    color:var(--red);
+    text-decoration:none;
+    font-weight:700;
+}
+
+.features{
+    margin-top:32px;
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:30px;
+}
+
+.feature{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    color:#b4bcc8;
+    font-size:12px;
+}
+
+/* ==============================
+   SECTIONS
+============================== */
+
+.section{
+    margin-top:65px;
+}
+
+.section-label{
+    text-align:center;
+    color:var(--red);
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:2.5px;
+}
+
+.section-title{
+    text-align:center;
+    margin-top:7px;
+    font-size:34px;
+    font-weight:950;
+}
+
+.section-subtitle{
+    text-align:center;
+    color:#737d8d;
+    margin-top:7px;
+    font-size:13px;
+}
+
+/* ==============================
+   MARKET
+============================== */
+
+.market{
+    padding:25px;
+}
+
+.market-top{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:20px;
+    margin-bottom:20px;
+}
+
+.market-name{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.market-name strong{
+    font-size:20px;
+}
+
+.market-badge{
+    padding:4px 8px;
+    border-radius:5px;
+    background:#1b222d;
+    color:#7f8998;
+    font-size:10px;
+}
+
+.price{
+    margin-top:7px;
+    font-size:28px;
+    font-weight:900;
+}
+
+.change{
+    color:#22c55e;
+    font-size:12px;
+    margin-left:5px;
+    font-weight:600;
+}
+
+.live-status{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    color:#8d97a6;
+    font-size:11px;
+}
+
+.green-dot{
+    width:7px;
+    height:7px;
+    background:#22c55e;
+    border-radius:50%;
+    box-shadow:0 0 10px rgba(34,197,94,.5);
+}
+
+.chart{
+    position:relative;
+    width:100%;
+    height:330px;
+}
+
+.chart-note{
+    margin-top:13px;
+    text-align:center;
+    color:#596271;
+    font-size:10px;
+}
+
+/* ==============================
+   STATS
+============================== */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+}
+
+.stat{
+    padding:22px;
+    transition:.25s;
+}
+
+.stat:hover{
+    transform:translateY(-3px);
+    border-color:rgba(255,42,75,.3);
+}
+
+.stat-icon{
+    color:var(--red);
+    font-size:16px;
+    margin-bottom:12px;
+}
+
+.stat-number{
+    font-size:27px;
+    font-weight:900;
+}
+
+.stat-label{
+    color:#737d8d;
+    font-size:11px;
+    margin-top:4px;
+}
+
+/* ==============================
+   WEEKLY
+============================== */
+
+.performance{
+    padding:24px;
+    margin-top:15px;
+}
+
+.performance-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.performance-title{
+    font-size:15px;
+    font-weight:800;
+}
+
+.performance-desc{
+    color:#697383;
+    font-size:11px;
+    margin-top:4px;
+}
+
+.legend{
+    display:flex;
+    gap:14px;
+    color:#7d8795;
+    font-size:10px;
+}
+
+.legend-item{
+    display:flex;
+    align-items:center;
+    gap:5px;
+}
+
+.legend-box{
+    width:9px;
+    height:9px;
+    border-radius:2px;
+}
+
+.legend-win{
+    background:#22c55e;
+}
+
+.legend-loss{
+    background:var(--red);
+}
+
+.weekly-chart{
+    height:300px;
+    position:relative;
+}
+
+/* ==============================
+   TESTIMONIALS
+============================== */
+
+.testimonials{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+}
+
+.testimonial{
+    padding:21px;
+}
+
+.stars{
+    color:#eab308;
+    font-size:12px;
+    letter-spacing:1px;
+}
+
+.testimonial p{
+    margin-top:12px;
+    color:#a7afbb;
+    font-size:12px;
+    line-height:1.7;
+}
+
+.person{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    margin-top:20px;
+}
+
+.avatar{
+    width:34px;
+    height:34px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:rgba(255,42,75,.10);
+    color:var(--red);
+    font-size:10px;
+    font-weight:900;
+}
+
+.person-name{
+    font-size:11px;
+    font-weight:800;
+}
+
+.person-status{
+    color:#5e6877;
+    font-size:9px;
+    margin-top:2px;
+}
+
+/* ==============================
+   REFERRAL
+============================== */
+
+.referral{
+    padding:24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:25px;
+}
+
+.referral-info{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.referral-icon{
+    width:50px;
+    height:50px;
+    flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(255,42,75,.10);
+    color:var(--red);
+    border-radius:11px;
+    font-size:20px;
+}
+
+.referral-title{
+    font-size:17px;
+    font-weight:850;
+}
+
+.referral-text{
+    color:#727c8b;
+    font-size:11px;
+    margin-top:4px;
+}
+
+.referral-box{
+    display:flex;
+    gap:8px;
+    width:100%;
+    max-width:460px;
+}
+
+.referral-input{
+    flex:1;
+    min-width:0;
+    padding:12px;
+    border:1px solid #303947;
+    border-radius:8px;
+    background:#080b11;
+    color:#8e98a7;
+    outline:none;
+    font-size:11px;
+}
+
+.copy-btn{
+    border:0;
+    padding:0 17px;
+    border-radius:8px;
+    background:var(--red);
+    color:#fff;
+    font-size:11px;
+    font-weight:800;
+    cursor:pointer;
+}
+
+/* ==============================
+   TELEGRAM
+============================== */
+
+.telegram-card{
+    padding:55px 25px;
+    text-align:center;
+}
+
+.support-icon{
+    width:55px;
+    height:55px;
+    margin:0 auto 16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:rgba(255,42,75,.10);
+    color:var(--red);
+    font-size:21px;
+}
+
+.telegram-card h2{
+    font-size:36px;
+    font-weight:950;
+}
+
+.telegram-card p{
+    max-width:520px;
+    margin:9px auto 0;
+    color:#7c8695;
+    font-size:13px;
+    line-height:1.7;
+}
+
+/* ==============================
+   FOOTER
+============================== */
+
+footer{
+    max-width:1180px;
+    margin:65px auto 0;
+    padding:25px 20px 18px;
+    border-top:1px solid #1d2531;
+}
+
+.footer-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.footer-brand{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-weight:800;
+    font-size:13px;
+}
+
+.footer-mini{
+    width:23px;
+    height:23px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:5px;
+    background:var(--red);
+    font-size:10px;
+    color:#fff;
+    font-weight:900;
+}
+
+.footer-links{
+    display:flex;
+    gap:22px;
+}
+
+.footer-links a{
+    color:#737d8c;
+    text-decoration:none;
+    font-size:11px;
+}
+
+.footer-links a:hover{
+    color:#fff;
+}
+
+.system{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    color:#687281;
+    font-size:10px;
+}
+
+.system-dot{
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background:#22c55e;
+}
+
+.copyright{
+    margin-top:23px;
+    text-align:center;
+    color:#414a57;
+    font-size:9px;
+}
+
+/* ==============================
+   FLOATING BUTTON
+============================== */
+
+.floating{
+    position:fixed;
+    right:24px;
+    bottom:24px;
+    z-index:9000;
+
+    width:50px;
+    height:50px;
+
+    border:0;
+    border-radius:50%;
+
+    background:linear-gradient(135deg,#ff2a4b,#d91639);
+    color:#fff;
+
+    font-size:18px;
+    cursor:pointer;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.5);
+}
+
+/* ==============================
+   AUTH
+============================== */
+
+#app-shell{
+    display:none;
+}
+
+#auth-screen{
+    position:fixed;
+    inset:0;
+    z-index:100000;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:20px;
+
+    background:
+    linear-gradient(
+        rgba(3,5,9,.78),
+        rgba(3,5,9,.96)
+    ),
+    url("https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=2200&q=85");
+
+    background-size:cover;
+    background-position:center;
+}
+
+.auth-card{
+    width:420px;
+    max-width:95vw;
+    padding:32px 28px;
+
+    background:rgba(10,13,19,.97);
+    border:1px solid rgba(255,42,75,.32);
+    border-radius:20px;
+
+    box-shadow:
+    0 25px 80px rgba(0,0,0,.75),
+    0 0 45px rgba(255,42,75,.08);
+}
+
+.auth-logo{
+    text-align:center;
+    font-size:29px;
+    font-weight:950;
+}
+
+.auth-subtitle{
+    text-align:center;
+    color:#7f8998;
+    font-size:12px;
+    margin:8px 0 25px;
+}
+
+.auth-field{
+    margin-bottom:14px;
+}
+
+.auth-field label{
+    display:block;
+    color:#c8ced7;
+    font-size:11px;
+    margin-bottom:7px;
+}
+
+.auth-field input{
+    width:100%;
+    padding:13px 14px;
+
+    border:1px solid #2c3543;
+    border-radius:9px;
+
+    background:#070a0f;
+    color:#fff;
+    outline:none;
+
+    font-size:13px;
+}
+
+.auth-field input:focus{
+    border-color:var(--red);
+    box-shadow:0 0 12px rgba(255,42,75,.12);
+}
+
+/* Password field wrapper for eye icon */
+.password-container {
+    position: relative;
+    width: 100%;
+}
+
+.password-container input {
+    padding-right: 42px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #7f8998;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0;
+}
+
+.toggle-password:hover {
+    color: #fff;
+}
+
+.auth-btn{
+    width:100%;
+    border:0;
+    border-radius:9px;
+    padding:13px;
+
+    background:linear-gradient(135deg,#ff2a4b,#d91639);
+    color:#fff;
+
+    font-size:13px;
+    font-weight:850;
+    cursor:pointer;
+}
+
+.auth-switch{
+    text-align:center;
+    margin-top:17px;
+    color:#697382;
+    font-size:11px;
+}
+
+.auth-switch button{
+    border:0;
+    background:none;
+    color:var(--red);
+    font-weight:850;
+    cursor:pointer;
+}
+
+.auth-message{
+    display:none;
+    margin-top:11px;
+    padding:9px;
+    border-radius:7px;
+    text-align:center;
+    font-size:11px;
+}
+
+.auth-message.success{
+    display:block;
+    color:#34d399;
+    background:rgba(16,185,129,.08);
+    border:1px solid rgba(16,185,129,.2);
+}
+
+.auth-message.error{
+    display:block;
+    color:#ff7183;
+    background:rgba(255,42,75,.08);
+    border:1px solid rgba(255,42,75,.2);
+}
+
+.auth-note{
+    text-align:center;
+    color:#4f5968;
+    font-size:9px;
+    margin-top:18px;
+}
+
+/* ==============================
+   INTERNET BLOCKER
+============================== */
+
+#internet-blocker{
+    position:fixed;
+    inset:0;
+    z-index:200000;
+
+    display:none;
+    align-items:center;
+    justify-content:center;
+
+    padding:20px;
+
+    background:rgba(3,4,7,.98);
+}
+
+.internet-card{
+    width:420px;
+    max-width:95vw;
+    padding:35px 25px;
+    text-align:center;
+
+    background:#10141c;
+    border:1px solid rgba(255,42,75,.3);
+    border-radius:20px;
+}
+
+.wifi-icon{
+    color:var(--red);
+    font-size:45px;
+    margin-bottom:14px;
+}
+
+.internet-card h2{
+    font-size:23px;
+    margin-bottom:9px;
+}
+
+.internet-card p{
+    color:#7d8796;
+    font-size:12px;
+    line-height:1.7;
+    margin-bottom:20px;
+}
+
+.internet-card button{
+    width:100%;
+    border:0;
+    padding:12px;
+    border-radius:8px;
+    background:var(--red);
+    color:#fff;
+    font-weight:800;
+    cursor:pointer;
+}
+
+.internet-status{
+    margin-top:12px;
+    color:#5d6775;
+    font-size:10px;
+}
+
+/* ==============================
+   RESPONSIVE MEDIA QUERIES
+============================== */
+
+@media(max-width:950px){
+    .nav-links{
+        gap:20px;
+    }
+    .telegram-contact{
+        display:none;
+    }
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+    .testimonials{
+        grid-template-columns:repeat(2,1fr);
+    }
+    .referral{
+        flex-direction:column;
+        align-items:stretch;
+    }
+    .referral-box{
+        max-width:none;
+    }
+}
+
+@media(max-width:700px){
+    body{
+        background-attachment:scroll;
+    }
+    .nav-inner{
+        min-height:64px;
+        padding:10px 14px;
+    }
+    .logo-box{
+        width:35px;
+        height:35px;
+        font-size:18px;
+    }
+    .logo-name{
+        font-size:17px;
+    }
+    .nav-links{
+        display:none;
+    }
+    .nav-actions .logout{
+        display:none;
+    }
+    .menu-btn{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+    }
+    .container{
+        padding:0 12px;
+    }
+    .hero{
+        margin-top:20px;
+        padding:48px 17px;
+        border-radius:18px;
+    }
+    .hero h1{
+        font-size:36px;
+        letter-spacing:-1.2px;
+        line-height:1.08;
+    }
+    .hero p{
+        font-size:13px;
+        line-height:1.7;
+    }
+    .hero-btn{
+        width:100%;
+        max-width:310px;
+    }
+    .features{
+        flex-direction:column;
+        gap:12px;
+        align-items:center;
+    }
+    .section{
+        margin-top:45px;
+    }
+    .section-title{
+        font-size:27px;
+    }
+    .market{
+        padding:17px;
+    }
+    .market-top{
+        flex-direction:column;
+        gap:10px;
+    }
+    .live-status{
+        align-self:flex-start;
+    }
+    .price{
+        font-size:25px;
+    }
+    .chart{
+        height:240px;
+    }
+    .stats{
+        grid-template-columns:1fr 1fr;
+        gap:9px;
+    }
+    .stat{
+        padding:16px;
+    }
+    .stat-number{
+        font-size:22px;
+    }
+    .stat-label{
+        font-size:10px;
+    }
+    .performance{
+        padding:17px;
+    }
+    .performance-head{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+    .weekly-chart{
+        height:240px;
+    }
+    .testimonials{
+        grid-template-columns:1fr;
+        gap:10px;
+    }
+    .testimonial{
+        padding:18px;
+    }
+    .referral{
+        padding:18px;
+    }
+    .referral-info{
+        align-items:flex-start;
+    }
+    .referral-box{
+        flex-direction:column;
+    }
+    .referral-input{
+        width:100%;
+        padding:13px;
+    }
+    .copy-btn{
+        width:100%;
+        min-height:42px;
+    }
+    .telegram-card{
+        padding:40px 18px;
+    }
+    .telegram-card h2{
+        font-size:28px;
+    }
+    .telegram-card .hero-btn{
+        max-width:none;
+    }
+    .footer-top{
+        flex-direction:column;
+        text-align:center;
+    }
+    .footer-links{
+        flex-wrap:wrap;
+        justify-content:center;
+    }
+    .system{
+        justify-content:center;
+    }
+    .floating{
+        right:15px;
+        bottom:15px;
+        width:46px;
+        height:46px;
+    }
+    .auth-card{
+        padding:27px 20px;
+    }
+}
+
+@media(max-width:400px){
+    .logo-name{
+        font-size:15px;
+    }
+    .hero h1{
+        font-size:30px;
+    }
+    .hero{
+        padding:40px 13px;
+    }
+    .stats{
+        grid-template-columns:1fr;
+    }
+    .chart{
+        height:215px;
+    }
+    .weekly-chart{
+        height:220px;
+    }
+    .section-title{
+        font-size:24px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="auth-screen">
+
+<div class="auth-card">
+
+<div class="auth-logo">
+<span class="text-accent">Z</span> Star Trader
+</div>
+
+<div class="auth-subtitle" id="authSubtitle">
+Create your account
+</div>
+
+<div id="registerFormBox">
+
+<form id="registerForm">
+
+<div class="auth-field">
+<label>Full Name</label>
+<input
+id="regName"
+type="text"
+placeholder="Enter your full name"
+required>
+</div>
+
+<div class="auth-field">
+<label>Email / Username</label>
+<input
+id="regEmail"
+type="text"
+placeholder="Enter email or username"
+required>
+</div>
+
+<div class="auth-field">
+<label>Password</label>
+<div class="password-container">
+<input
+id="regPassword"
+type="password"
+placeholder="Create password"
+required>
+<button type="button" class="toggle-password" onclick="togglePasswordVisibility('regPassword', this)">
+<i class="fas fa-eye-slash"></i>
+</button>
+</div>
+</div>
+
+<div class="auth-field">
+<label>Confirm Password</label>
+<div class="password-container">
+<input
+id="regConfirm"
+type="password"
+placeholder="Confirm password"
+required>
+<button type="button" class="toggle-password" onclick="togglePasswordVisibility('regConfirm', this)">
+<i class="fas fa-eye-slash"></i>
+</button>
+</div>
+</div>
+
+<button class="auth-btn" type="submit">
+REGISTER
+</button>
+
+<div id="registerMessage" class="auth-message"></div>
+
+</form>
+
+<div class="auth-switch">
+Already have an account?
+<button type="button" onclick="showLoginForm()">
+LOGIN
+</button>
+</div>
+
+</div>
+
+<div id="loginFormBox" style="display:none;">
+
+<form id="loginForm">
+
+<div class="auth-field">
+<label>Email / Username</label>
+<input
+id="loginId"
+type="text"
+placeholder="Enter email or username"
+required>
+</div>
+
+<div class="auth-field">
+<label>Password</label>
+<div class="password-container">
+<input
+id="loginPassword"
+type="password"
+placeholder="Enter password"
+required>
+<button type="button" class="toggle-password" onclick="togglePasswordVisibility('loginPassword', this)">
+<i class="fas fa-eye-slash"></i>
+</button>
+</div>
+</div>
+
+<button class="auth-btn" type="submit">
+LOGIN
+</button>
+
+<div id="loginMessage" class="auth-message"></div>
+
+</form>
+
+<div class="auth-switch">
+Don't have an account?
+<button type="button" onclick="showRegisterForm()">
+REGISTER
+</button>
+</div>
+
+</div>
+
+<div class="auth-note">
+Your account is saved locally on this device. Internet connection is required to use this website.
+</div>
+
+</div>
+</div>
+
+
+<div id="app-shell">
+
+<nav class="navbar">
+
+<div class="nav-inner">
+
+<a href="index.html" class="logo">
+
+<div class="logo-box">
+Z
+</div>
+
+<span class="logo-name">
+<span class="text-accent">Z</span> Star Trader
+</span>
+
+</a>
+
+<div class="nav-links">
+
+<a href="index.html" class="active">
+Home
+</a>
+
+<a href="how-to-use.html">
+How To Use
+</a>
+
+<a href="Dashboard.html">
+Dashboard
+</a>
+
+</div>
+
+<div class="nav-actions">
+
+<a
+  href="https://t.me/+_2L8xYYKwec4ZmU0"
+  target="_blank"
+  class="telegram-contact">
+  <i class="fab fa-telegram"></i>
+  Telegram
+</a> 
+
+<button
+class="logout"
+onclick="logoutUser()">
+
+LOGOUT
+
+</button>
+
+<button
+class="menu-btn"
+id="menuButton"
+onclick="toggleMobileMenu()">
+
+<i class="fas fa-bars"></i>
+
+</button>
+
+</div>
+
+</div>
+
+<div class="mobile-menu" id="mobileMenu">
+
+<a href="index.html">
+<i class="fas fa-house"></i>
+Home
+</a>
+
+<a href="how-to-use.html">
+<i class="fas fa-circle-question"></i>
+How To Use
+</a>
+
+<a href="Dashboard.html">
+<i class="fas fa-chart-line"></i>
+Dashboard
+</a>
+
+<a
+href="https://t.me/+_2L8xYYKwec4ZmU0"
+target="_blank">
+
+<i class="fab fa-telegram"></i>
+Telegram
+</a>
+
+<a
+href="#"
+class="mobile-logout"
+onclick="logoutUser();return false;">
+
+<i class="fas fa-right-from-bracket"></i>
+LOGOUT
+</a>
+
+</div>
+
+</nav>
+
+
+<main class="container">
+
+<section class="hero">
+
+<div class="hero-content">
+
+<div class="live">
+
+<span class="live-dot"></span>
+
+LIVE SIGNALS ACTIVE
+
+</div>
+
+<h1>
+
+Premium
+
+<span class="text-accent">
+1-Minute
+</span>
+
+Trading Signals
+
+</h1>
+
+<p>
+
+Trading tools, market references and signal information
+in one clean and responsive interface.
+
+</p>
+
+<a
+href="https://t.me/+_2L8xYYKwec4ZmU0"
+target="_blank"
+class="hero-btn">
+
+JOIN TELEGRAM
+
+<i class="fas fa-arrow-right"></i>
+
+</a>
+
+<div class="dashboard-link">
+
+<i class="fas fa-lock"></i>
+
+Already have access?
+
+<a href="Dashboard.html">
+Open Dashboard
+</a>
+
+</div>
+
+<div class="features">
+
+<div class="feature">
+<i class="far fa-check-circle text-accent"></i>
+Verified Signals
+</div>
+
+<div class="feature">
+<i class="far fa-clock text-accent"></i>
+1-Min Reference
+</div>
+
+<div class="feature">
+<i class="fas fa-users text-accent"></i>
+Trading Community
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<section class="section">
+
+<div class="card market">
+
+<div class="market-top">
+
+<div>
+
+<div class="market-name">
+
+<strong>
+<span class="text-accent">EUR</span> Trade
+</strong>
+
+<span class="market-badge">
+H1 LIVE
+</span>
+
+</div>
+
+<div class="price">
+
+1.08626
+
+<span class="change">
+▲ 0.00103
+</span>
+
+</div>
+
+</div>
+
+<div class="live-status">
+
+<span class="green-dot"></span>
+
+LIVE • H1
+
+</div>
+
+</div>
+
+<div class="chart">
+
+<canvas id="candlestickChart"></canvas>
+
+</div>
+
+<div class="chart-note">
+
+Simulated market feed • For reference only • Not financial advice
+
+</div>
+
+</div>
+
+</section>
+
+
+<section class="section">
+
+<div class="section-label">
+PERFORMANCE ANALYTICS
+</div>
+
+<h2 class="section-title">
+Signal Overview
+</h2>
+
+<p class="section-subtitle">
+Example statistics for the interface
+</p>
+
+<div class="stats">
+
+<div class="card stat">
+
+<div class="stat-icon">
+<i class="fas fa-chart-line"></i>
+</div>
+
+<div class="stat-number">
+3,452
+</div>
+
+<div class="stat-label">
+Total Signals
+</div>
+
+</div>
+
+<div class="card stat">
+
+<div class="stat-icon">
+<i class="fas fa-trophy"></i>
+</div>
+
+<div class="stat-number">
+3,149
+</div>
+
+<div class="stat-label">
+Wins
+</div>
+
+</div>
+
+<div class="card stat">
+
+<div class="stat-icon">
+<i class="fas fa-bullseye"></i>
+</div>
+
+<div class="stat-number">
+303
+</div>
+
+<div class="stat-label">
+Losses
+</div>
+
+</div>
+
+<div class="card stat">
+
+<div class="stat-icon">
+<i class="fas fa-percentage"></i>
+</div>
+
+<div class="stat-number">
+91.2%
+</div>
+
+<div class="stat-label">
+Example Win Rate
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card performance">
+
+<div class="performance-head">
+
+<div>
+
+<div class="performance-title">
+Weekly Performance
+</div>
+
+<div class="performance-desc">
+Example win/loss distribution
+</div>
+
+</div>
+
+<div class="legend">
+
+<div class="legend-item">
+<span class="legend-box legend-win"></span>
+Wins
+</div>
+
+<div class="legend-item">
+<span class="legend-box legend-loss"></span>
+Losses
+</div>
+
+</div>
+
+</div>
+
+<div class="weekly-chart">
+
+<canvas id="weeklyChart"></canvas>
+
+</div>
+
+</div>
+
+</section>
+
+
+<section class="section">
+
+<div class="section-label">
+COMMUNITY
+</div>
+
+<h2 class="section-title">
+Trader Feedback
+</h2>
+
+<p class="section-subtitle">
+Example testimonials for the website design
+</p>
+
+<div class="testimonials">
+
+<div class="card testimonial">
+
+<div>
+
+<div class="stars">
+★★★★★
+</div>
+
+<p>
+"Clean interface and easy to use.
+The information is displayed clearly."
+</p>
+
+</div>
+
+<div class="person">
+
+<div class="avatar">
+AK
+</div>
+
+<div>
+
+<div class="person-name">
+Ahmed K.
+</div>
+
+<div class="person-status">
+Community Member
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card testimonial">
+
+<div>
+
+<div class="stars">
+★★★★★
+</div>
+
+<p>
+"Simple layout and quick access
+to the important sections."
+</p>
+
+</div>
+
+<div class="person">
+
+<div class="avatar">
+RP
+</div>
+
+<div>
+
+<div class="person-name">
+Raj P.
+</div>
+
+<div class="person-status">
+Community Member
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card testimonial">
+
+<div>
+
+<div class="stars">
+★★★★★
+</div>
+
+<p>
+"The mobile version looks clean
+and works smoothly on my phone."
+</p>
+
+</div>
+
+<div class="person">
+
+<div class="avatar">
+OS
+</div>
+
+<div>
+
+<div class="person-name">
+Omar S.
+</div>
+
+<div class="person-status">
+Community Member
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card testimonial">
+
+<div>
+
+<div class="stars">
+★★★★★
+</div>
+
+<p>
+"Professional dark interface
+with simple navigation."
+</p>
+
+</div>
+
+<div class="person">
+
+<div class="avatar">
+JW
+</div>
+
+<div>
+
+<div class="person-name">
+James W.
+</div>
+
+<div class="person-status">
+Community Member
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<section class="section">
+
+<div class="card referral">
+
+<div class="referral-info">
+
+<div class="referral-icon">
+
+<i class="fas fa-link"></i>
+
+</div>
+
+<div>
+
+<div class="referral-title">
+
+Your
+<span class="text-accent">
+Referral
+</span>
+Link
+
+</div>
+
+<div class="referral-text">
+
+Share this website with your friends.
+
+</div>
+
+</div>
+
+</div>
+
+<div class="referral-box">
+
+<input
+id="refLink"
+class="referral-input"
+readonly
+value="https://zohaibrisingstar-dotcom.github.io/www.zstartrader.com/">
+
+<button
+class="copy-btn"
+id="copyBtn"
+onclick="copyReferralLink()">
+
+<i class="far fa-copy" id="copyIcon"></i>
+
+<span id="copyText">
+Copy Link
+</span>
+
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<section class="section">
+
+<div class="card telegram-card">
+
+<div class="support-icon">
+
+<i class="fab fa-telegram-plane"></i>
+
+</div>
+
+<h2>
+
+Need Help?
+
+<span class="text-accent">
+Join Telegram
+</span>
+
+</h2>
+
+<p>
+
+Get support, updates and community information
+through our Telegram channel.
+
+</p>
+
+<a
+href="https://t.me/+_2L8xYYKwec4ZmU0"
+target="_blank"
+class="hero-btn">
+
+<i class="fab fa-telegram"></i>
+
+Join Telegram
+
+<i class="fas fa-arrow-right"></i>
+
+</a>
+
+</div>
+
+</section>
+
+</main>
+
+
+<footer>
+
+<div class="footer-top">
+
+<div class="footer-brand">
+
+<div class="footer-mini">
+Z
+</div>
+
+<span class="text-accent">Z</span> Star Trader
+
+</div>
+
+<div class="footer-links">
+
+<a href="index.html">
+Home
+</a>
+
+<a href="how-to-use.html">
+How To Use
+</a>
+
+<a href="Dashboard.html">
+Dashboard
+</a>
+
+</div>
+
+<div class="system">
+
+<span class="system-dot"></span>
+
+SYS_TIME:
+
+<span id="sysTime">
+00:00:00
+</span>
+
+</div>
+
+</div>
+
+<div class="copyright">
+
+© 2026 Z Star Trader. All rights reserved.
+Trading involves risk.
+
+</div>
+
+</footer>
+
+
+<button class="floating"
+onclick="openTelegram()">
+
+<i class="fab fa-telegram-plane"></i>
+
+</button>
+
+</div>
+
+
+<div id="internet-blocker">
+
+<div class="internet-card">
+
+<div class="wifi-icon">
+
+<i class="fas fa-plug-circle-xmark"></i>
+
+</div>
+
+<h2>
+No Internet Connection
+</h2>
+
+<p>
+Internet connection is required.
+Please turn on your internet and try again.
+</p>
+
+<button onclick="verifyInternet()">
+TRY AGAIN
+</button>
+
+<div class="internet-status" id="internetStatus">
+Checking connection...
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =====================================
+TOGGLE PASSWORD VISIBILITY
+===================================== */
+
+function togglePasswordVisibility(fieldId, btn){
+    const input = document.getElementById(fieldId);
+    const icon = btn.querySelector('i');
+    
+    if(input.type === "password"){
+        input.type = "text";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+    } else {
+        input.type = "password";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+    }
+}
+
+
+/* =====================================
+AUTH SYSTEM
+===================================== */
+
+function showRegisterForm(){
+
+document.getElementById("registerFormBox").style.display="block";
+document.getElementById("loginFormBox").style.display="none";
+
+document.getElementById("authSubtitle").textContent=
+"Create your account";
+
+clearAuthMessages();
+
+}
+
+
+function showLoginForm(){
+
+document.getElementById("registerFormBox").style.display="none";
+document.getElementById("loginFormBox").style.display="block";
+
+document.getElementById("authSubtitle").textContent=
+"Login to your account";
+
+clearAuthMessages();
+
+/* Load the same registered account into the login boxes. */
+const savedAccount = localStorage.getItem("finorix_user");
+
+if(savedAccount){
+  try{
+    const user = JSON.parse(savedAccount);
+
+    document.getElementById("loginId").value = user.id || "";
+    document.getElementById("loginPassword").value = user.password || "";
+  }catch(error){
+    document.getElementById("loginId").value = "";
+    document.getElementById("loginPassword").value = "";
+  }
+}
+
+}
+
+
+function clearAuthMessages(){
+
+["registerMessage","loginMessage"].forEach(function(id){
+
+const e=document.getElementById(id);
+
+e.className="auth-message";
+e.textContent="";
+e.style.display="none";
+
+});
+
+}
+
+
+function msg(id,text,type){
+
+const e=document.getElementById(id);
+
+e.className="auth-message "+type;
+e.textContent=text;
+e.style.display="block";
+
+}
+
+
+function openApp(){
+
+localStorage.setItem(
+"finorix_logged_in",
+"true"
+);
+
+document.getElementById("auth-screen").style.display="none";
+document.getElementById("app-shell").style.display="block";
+
+setTimeout(function(){
+
+window.dispatchEvent(new Event("resize"));
+
+},150);
+
+}
+
+
+function logoutUser(){
+
+/* Logout only ends the current session.
+   The registered account stays saved locally. */
+localStorage.removeItem("finorix_logged_in");
+localStorage.removeItem("finorix_current_user");
+
+document.getElementById("app-shell").style.display="none";
+document.getElementById("auth-screen").style.display="flex";
+
+/* After logout, show LOGIN so the same saved email/password
+   can be used again. */
+showLoginForm();
+
+/* Keep the registered email and password available after logout.
+   The account itself is NOT deleted. */
+const savedLogoutAccount = localStorage.getItem("finorix_user");
+
+if(savedLogoutAccount){
+  try{
+    const savedUser = JSON.parse(savedLogoutAccount);
+
+    document.getElementById("loginId").value = savedUser.id || "";
+    document.getElementById("loginPassword").value = savedUser.password || "";
+  }catch(error){
+    document.getElementById("loginId").value = "";
+    document.getElementById("loginPassword").value = "";
+  }
+}else{
+  document.getElementById("loginId").value = "";
+  document.getElementById("loginPassword").value = "";
+}
+
+window.scrollTo(0,0);
+
+}
+
+
+/* REGISTER */
+
+document
+.getElementById("registerForm")
+.addEventListener("submit",function(e){
+
+e.preventDefault();
+
+const name=
+document.getElementById("regName").value.trim();
+
+const id=
+document.getElementById("regEmail").value.trim();
+
+const password=
+document.getElementById("regPassword").value;
+
+const confirm=
+document.getElementById("regConfirm").value;
+
+if(password.length<6){
+
+msg(
+"registerMessage",
+"Password must be at least 6 characters.",
+"error"
+);
+
+return;
+
+}
+
+if(password!==confirm){
+
+msg(
+"registerMessage",
+"Passwords do not match.",
+"error"
+);
+
+return;
+
+}
+
+const user={
+name:name,
+id:id,
+password:password
+};
+
+/* LOCAL ACCOUNT STORAGE
+   This remains saved even after logout or closing/reopening
+   the browser on the same device/browser. */
+localStorage.setItem(
+"finorix_user",
+JSON.stringify(user)
+);
+
+localStorage.setItem(
+"finorix_current_user",
+JSON.stringify(user)
+);
+
+msg(
+"registerMessage",
+"Registration successful. Opening Page 1...",
+"success"
+);
+
+setTimeout(openApp,500);
+
+});
+
+
+/* LOGIN */
+
+document
+.getElementById("loginForm")
+.addEventListener("submit",function(e){
+
+e.preventDefault();
+
+const id=
+document.getElementById("loginId").value.trim();
+
+const password=
+document.getElementById("loginPassword").value;
+
+const saved=
+localStorage.getItem("finorix_user");
+
+if(!saved){
+
+msg(
+"loginMessage",
+"No registered account found. Please register first.",
+"error"
+);
+
+return;
+
+}
+
+let user;
+
+try{
+user=JSON.parse(saved);
+}catch(error){
+localStorage.removeItem("finorix_user");
+
+msg(
+"loginMessage",
+"Saved account data is invalid. Please register again.",
+"error"
+);
+
+return;
+}
+
+/* Only the locally registered email/username and password
+   are allowed to open this website. */
+if(user.id!==id || user.password!==password){
+
+msg(
+"loginMessage",
+"Incorrect username or password.",
+"error"
+);
+
+return;
+
+}
+
+localStorage.setItem(
+"finorix_current_user",
+JSON.stringify(user)
+);
+
+msg(
+"loginMessage",
+"Login successful. Opening Page 1...",
+"success"
+);
+
+setTimeout(openApp,400);
+
+});
+
+
+/* =====================================
+INTERNET
+===================================== */
+
+async function verifyInternet(){
+
+const status=
+document.getElementById("internetStatus");
+
+status.textContent=
+"Checking internet...";
+
+if(!navigator.onLine){
+
+showInternetBlock(
+"Internet is OFF. Turn on Wi-Fi or mobile data."
+);
+
+return false;
+
+}
+
+const controller=
+new AbortController();
+
+const timeout=
+setTimeout(
+()=>controller.abort(),
+5000
+);
+
+try{
+
+await fetch(
+"https://www.gstatic.com/generate_204?finorix="+Date.now(),
+{
+method:"GET",
+mode:"no-cors",
+cache:"no-store",
+signal:controller.signal
+}
+);
+
+clearTimeout(timeout);
+
+hideInternetBlock();
+
+return true;
+
+}catch(error){
+
+clearTimeout(timeout);
+
+showInternetBlock(
+"Internet connection could not be verified."
+);
+
+return false;
+
+}
+
+}
+
+
+function showInternetBlock(text){
+
+document
+.getElementById("internet-blocker")
+.style.display="flex";
+
+document
+.getElementById("internetStatus")
+.textContent=text;
+
+document
+.getElementById("app-shell")
+.style.display="none";
+
+document
+.getElementById("auth-screen")
+.style.display="none";
+
+}
+
+
+function hideInternetBlock(){
+
+document
+.getElementById("internet-blocker")
+.style.display="none";
+
+if(
+localStorage.getItem("finorix_logged_in")==="true"
+){
+
+document.getElementById("auth-screen").style.display="none";
+document.getElementById("app-shell").style.display="block";
+
+}else{
+
+document.getElementById("auth-screen").style.display="flex";
+document.getElementById("app-shell").style.display="none";
+
+}
+
+}
+
+
+window.addEventListener(
+"online",
+verifyInternet
+);
+
+window.addEventListener(
+"offline",
+function(){
+
+showInternetBlock(
+"Internet connection lost. Please turn it on."
+);
+
+});
+
+window.addEventListener(
+"load",
+verifyInternet
+);
+
+
+/* =====================================
+AUTO LOGIN
+===================================== */
+
+window.addEventListener(
+"load",
+function(){
+
+if(
+localStorage.getItem("finorix_logged_in")==="true"
+){
+
+document.getElementById("auth-screen").style.display="none";
+document.getElementById("app-shell").style.display="block";
+
+}
+
+});
+
+
+/* =====================================
+MOBILE MENU
+===================================== */
+
+function toggleMobileMenu(){
+
+const menu=
+document.getElementById("mobileMenu");
+
+const button=
+document.getElementById("menuButton");
+
+menu.classList.toggle("show");
+
+if(menu.classList.contains("show")){
+
+button.innerHTML=
+'<i class="fas fa-times"></i>';
+
+}else{
+
+button.innerHTML=
+'<i class="fas fa-bars"></i>';
+
+}
+
+}
+
+
+/* =====================================
+COPY REFERRAL
+===================================== */
+
+function copyReferralLink(){
+
+const input=
+document.getElementById("refLink");
+
+const text=
+input.value;
+
+const btnText=
+document.getElementById("copyText");
+
+const icon=
+document.getElementById("copyIcon");
+
+if(navigator.clipboard){
+
+navigator.clipboard.writeText(text);
+
+}else{
+
+input.select();
+document.execCommand("copy");
+
+}
+
+btnText.innerText="Copied!";
+icon.className="fas fa-check";
+
+setTimeout(function(){
+
+btnText.innerText="Copy Link";
+icon.className="far fa-copy";
+
+},2000);
+
+}
+
+
+/* =====================================
+CLOCK
+===================================== */
+
+function updateClock(){
+
+const now=new Date();
+
+let hours=now.getHours();
+
+const minutes=
+String(now.getMinutes()).padStart(2,"0");
+
+const seconds=
+String(now.getSeconds()).padStart(2,"0");
+
+const ampm=
+hours>=12 ? "PM":"AM";
+
+hours=hours%12;
+hours=hours ? hours:12;
+
+document.getElementById("sysTime").innerText=
+String(hours).padStart(2,"0")
++":"+minutes+":"+seconds+" "+ampm;
+
+}
+
+updateClock();
+
+setInterval(updateClock,1000);
+
+
+/* =====================================
+TELEGRAM
+===================================== */
+
+function openTelegram(){
+
+window.open(
+"https://t.me/ZOHAIB_BINARY_TRADER",
+"_blank"
+);
+
+}
+
+
+/* =====================================
+CHART DEFAULTS
+===================================== */
+
+Chart.defaults.font.family=
+'-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif';
+
+Chart.defaults.color="#6f7988";
+
+
+/* =====================================
+EUR TRADE CHART
+===================================== */
+
+const candleCanvas=
+document.getElementById(
+"candlestickChart"
+);
+
+const candleCtx=
+candleCanvas.getContext("2d");
+
+new Chart(
+candleCtx,
+{
+
+type:"line",
+
+data:{
+
+labels:[
+"00:50",
+"01:50",
+"03:10",
+"05:10",
+"07:10",
+"09:10",
+"11:10",
+"13:10",
+"15:10",
+"17:10"
+],
+
+datasets:[
+
+{
+
+label:"EUR Trade",
+
+data:[
+1.0837,
+1.0844,
+1.0855,
+1.0849,
+1.0862,
+1.0850,
+1.0845,
+1.0858,
+1.0860,
+1.08626
+],
+
+borderColor:"#22c55e",
+
+backgroundColor:"rgba(34,197,94,.06)",
+
+borderWidth:2,
+
+tension:.35,
+
+pointRadius:0,
+
+fill:true
+
+}
+
+]
+
+},
+
+options:{
+
+responsive:true,
+
+maintainAspectRatio:false,
+
+plugins:{
+
+legend:{
+display:false
+},
+
+tooltip:{
+
+backgroundColor:"#10151e",
+borderColor:"#293241",
+borderWidth:1,
+titleColor:"#fff",
+bodyColor:"#aeb7c4"
+
+}
+
+},
+
+scales:{
+
+x:{
+
+grid:{
+color:"#1d2530"
+},
+
+ticks:{
+color:"#667181",
+maxRotation:0,
+autoSkip:true,
+maxTicksLimit:6
+}
+
+},
+
+y:{
+
+grid:{
+color:"#1d2530"
+},
+
+ticks:{
+color:"#667181"
+}
+
+}
+
+}
+
+}
+
+}
+
+);
+
+
+/* =====================================
+WEEKLY CHART
+===================================== */
+
+const weeklyCanvas=
+document.getElementById(
+"weeklyChart"
+);
+
+const weeklyCtx=
+weeklyCanvas.getContext("2d");
+
+new Chart(
+weeklyCtx,
+{
+
+type:"bar",
+
+data:{
+
+labels:[
+"Mon",
+"Tue",
+"Wed",
+"Thu",
+"Fri",
+"Sat",
+"Sun"
+],
+
+datasets:[
+
+{
+
+label:"Wins",
+
+data:[
+85,
+80,
+90,
+89,
+75,
+60,
+65
+],
+
+backgroundColor:"#22c55e",
+
+borderRadius:5
+
+},
+
+{
+
+label:"Losses",
+
+data:[
+15,
+20,
+10,
+11,
+25,
+40,
+35
+],
+
+backgroundColor:"#ff2a4b",
+
+borderRadius:5
+
+}
+
+]
+
+},
+
+options:{
+
+responsive:true,
+
+maintainAspectRatio:false,
+
+plugins:{
+
+legend:{
+display:false
+}
+
+},
+
+scales:{
+
+x:{
+
+stacked:true,
+
+grid:{
+display:false
+},
+
+ticks:{
+color:"#697383"
+}
+
+},
+
+y:{
+
+stacked:true,
+
+grid:{
+color:"#1d2530"
+},
+
+ticks:{
+color:"#697383"
+}
+
+}
+
+}
+
+}
+
+}
+
+);
+
+
+/* =====================================
+RESIZE
+===================================== */
+
+window.addEventListener(
+"resize",
+function(){
+
+if(window.innerWidth>700){
+
+document
+.getElementById("mobileMenu")
+.classList.remove("show");
+
+document
+.getElementById("menuButton")
+.innerHTML=
+'<i class="fas fa-bars"></i>';
+
+}
+
+});
+
+document.addEventListener("contextmenu", function(e) {
+    e.preventDefault();
+});
+
+document.addEventListener("keydown", function(e) {
+    if (
+        e.key === "F12" ||
+        (e.ctrlKey && e.shiftKey && ["I", "J", "C"].includes(e.key.toUpperCase())) ||
+        (e.ctrlKey && e.key.toUpperCase() === "U")
+    ) {
+        e.preventDefault();
+        return false;
+    }
+});
+</script>
+
+</body>
+</html>
