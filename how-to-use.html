@@ -1,0 +1,1756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Z Star Trader - How To Use</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  >
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+
+      background-color: #0b0e14;
+      color: #ffffff;
+
+      font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+      background-image:
+        linear-gradient(
+          rgba(11, 14, 20, 0.88),
+          rgba(11, 14, 20, 0.94)
+        ),
+        url("https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=2200&q=85");
+
+      background-size: cover;
+      background-position: center top;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+
+      overflow-x: hidden;
+    }
+
+
+    /* =========================================
+       COLORS
+    ========================================= */
+
+    .text-accent {
+      color: #ff2a4b;
+    }
+
+    .bg-accent {
+      background-color: #ff2a4b;
+    }
+
+    .bg-accent:hover {
+      background-color: #e0223f;
+    }
+
+    .border-accent {
+      border-color: #ff2a4b;
+    }
+
+
+    /* =========================================
+       CARD
+    ========================================= */
+
+    .card-bg {
+      background-color: rgba(18, 23, 33, 0.94);
+
+      border: 1px solid #1e2532;
+
+      box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.25);
+
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+
+    /* =========================================
+       NAVBAR
+    ========================================= */
+
+    .main-navbar {
+      width: 100%;
+
+      position: relative;
+
+      z-index: 100;
+
+      border-bottom:
+        1px solid rgba(255, 255, 255, 0.08);
+
+      background:
+        rgba(7, 9, 14, 0.82);
+
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+
+    .navbar-inner {
+      width: 100%;
+
+      max-width: 1400px;
+
+      min-height: 74px;
+
+      margin: auto;
+
+      padding: 14px 28px;
+
+      display: flex;
+
+      align-items: center;
+
+      justify-content: space-between;
+
+      gap: 20px;
+    }
+
+
+    /* BRAND */
+
+    .brand {
+      display: flex;
+
+      align-items: center;
+
+      gap: 10px;
+
+      text-decoration: none;
+
+      color: white;
+
+      flex-shrink: 0;
+    }
+
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      background: #ff2a4b;
+
+      color: white;
+
+      border-radius: 8px;
+
+      font-size: 21px;
+
+      font-weight: 900;
+    }
+
+
+    .brand-name {
+      font-size: 20px;
+
+      font-weight: 800;
+
+      letter-spacing: .3px;
+
+      white-space: nowrap;
+    }
+
+
+    /* DESKTOP MENU */
+
+    .desktop-menu {
+      display: flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      gap: 32px;
+
+      flex: 1;
+    }
+
+
+    .desktop-menu a {
+      color: #8d96a6;
+
+      text-decoration: none;
+
+      font-size: 15px;
+
+      font-weight: 500;
+
+      padding: 7px 0;
+
+      transition: .2s ease;
+    }
+
+
+    .desktop-menu a:hover {
+      color: white;
+    }
+
+
+    .desktop-menu a.active {
+      color: #ff2a4b;
+    }
+
+
+    /* NAV ACTIONS */
+
+    .nav-actions {
+      display: flex;
+
+      align-items: center;
+
+      gap: 14px;
+
+      flex-shrink: 0;
+    }
+
+
+    .telegram-btn {
+      color: #9ca5b5;
+
+      text-decoration: none;
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 7px;
+
+      font-size: 14px;
+
+      transition: .2s ease;
+    }
+
+
+    .telegram-btn:hover {
+      color: white;
+    }
+
+
+    .join-btn {
+      background: #ff2a4b;
+
+      color: white;
+
+      text-decoration: none;
+
+      padding: 10px 19px;
+
+      border-radius: 7px;
+
+      font-size: 13px;
+
+      font-weight: 700;
+
+      white-space: nowrap;
+
+      transition: .2s ease;
+
+      border: none;
+
+      cursor: pointer;
+    }
+
+
+    .join-btn:hover {
+      background: #e0223f;
+    }
+
+
+    /* MOBILE MENU BUTTON */
+
+    .mobile-menu-btn {
+      display: none;
+
+      width: 42px;
+      height: 42px;
+
+      border: 1px solid #29303d;
+
+      background: #111620;
+
+      color: white;
+
+      border-radius: 8px;
+
+      cursor: pointer;
+
+      font-size: 18px;
+
+      align-items: center;
+      justify-content: center;
+    }
+
+
+    /* MOBILE MENU */
+
+    .mobile-menu {
+      display: none;
+
+      padding: 0 20px 18px;
+
+      border-top:
+        1px solid rgba(255,255,255,.05);
+    }
+
+
+    .mobile-menu.show {
+      display: block;
+    }
+
+
+    .mobile-menu a {
+      display: block;
+
+      color: #9ca5b5;
+
+      text-decoration: none;
+
+      padding: 12px 5px;
+
+      border-bottom:
+        1px solid rgba(255,255,255,.05);
+
+      font-size: 15px;
+    }
+
+
+    .mobile-menu a:hover {
+      color: white;
+    }
+
+
+    /* =========================================
+       MAIN
+    ========================================= */
+
+    .main-container {
+      width: 100%;
+
+      max-width: 1100px;
+
+      margin: auto;
+
+      padding-left: 20px;
+
+      padding-right: 20px;
+    }
+
+
+    /* =========================================
+       HERO / HEADER
+    ========================================= */
+
+    .page-hero {
+      margin-top: 45px;
+
+      text-align: center;
+
+      padding: 55px 25px;
+
+      border-radius: 20px;
+
+      position: relative;
+
+      overflow: hidden;
+    }
+
+
+    .page-hero::before {
+      content: "";
+
+      position: absolute;
+
+      inset: 0;
+
+      background:
+        rgba(0,0,0,.20);
+
+      border-radius: 20px;
+
+      z-index: -1;
+    }
+
+
+    .getting-started {
+      display: inline-flex;
+
+      align-items: center;
+
+      gap: 8px;
+
+      background:
+        rgba(90, 0, 15, .35);
+
+      color: #ff4c69;
+
+      font-size: 12px;
+
+      font-weight: 700;
+
+      padding: 7px 12px;
+
+      border-radius: 30px;
+
+      border:
+        1px solid rgba(255,42,75,.25);
+
+      margin-bottom: 20px;
+
+      letter-spacing: 2px;
+    }
+
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+
+      border-radius: 50%;
+
+      background: #ff2a4b;
+
+      animation: pulse 1.5s infinite;
+    }
+
+
+    @keyframes pulse {
+
+      0% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: .35;
+      }
+
+      100% {
+        opacity: 1;
+      }
+
+    }
+
+
+    .page-hero h1 {
+      font-size:
+        clamp(34px, 5vw, 58px);
+
+      line-height: 1.08;
+
+      font-weight: 900;
+
+      margin:
+        0 auto 20px;
+
+      max-width: 900px;
+    }
+
+
+    .page-hero p {
+      color: #9ca3af;
+
+      font-size:
+        clamp(15px, 2vw, 18px);
+
+      line-height: 1.7;
+
+      max-width: 700px;
+
+      margin:
+        0 auto;
+    }
+
+
+    /* =========================================
+       STEPS
+    ========================================= */
+
+    .steps-section {
+      width: 100%;
+
+      max-width: 900px;
+
+      margin:
+        20px auto 0;
+
+      padding:
+        0 20px;
+    }
+
+
+    .steps {
+      display: flex;
+
+      flex-direction: column;
+
+      gap: 14px;
+    }
+
+
+    .step-card {
+      width: 100%;
+
+      padding: 23px;
+
+      border-radius: 12px;
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 20px;
+
+      transition:
+        transform .2s ease,
+        border-color .2s ease,
+        box-shadow .2s ease;
+    }
+
+
+    .step-card:hover {
+      transform: translateY(-2px);
+
+      border-color:
+        rgba(255,42,75,.45);
+
+      box-shadow:
+        0 12px 35px rgba(0,0,0,.30);
+    }
+
+
+    .step-number {
+      width: 62px;
+      min-width: 62px;
+
+      height: 62px;
+
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 10px;
+
+      background:
+        rgba(100,0,20,.30);
+
+      border:
+        1px solid rgba(255,42,75,.20);
+
+      color: #ff2a4b;
+
+      font-size: 21px;
+
+      font-weight: 900;
+    }
+
+
+    .step-content {
+      flex: 1;
+    }
+
+
+    .step-title {
+      margin: 0;
+
+      font-size: 18px;
+
+      font-weight: 800;
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 9px;
+    }
+
+
+    .step-title i {
+      color: #ff2a4b;
+
+      font-size: 14px;
+    }
+
+
+    .step-description {
+      margin:
+        7px 0 0;
+
+      color: #9ca3af;
+
+      font-size: 13px;
+
+      line-height: 1.65;
+    }
+
+
+    /* =========================================
+       START BUTTON
+    ========================================= */
+
+    .start-area {
+      text-align: center;
+
+      margin-top: 35px;
+    }
+
+
+    .start-button {
+      display: inline-flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      gap: 10px;
+
+      background: #ff2a4b;
+
+      color: white;
+
+      text-decoration: none;
+
+      font-size: 16px;
+
+      font-weight: 800;
+
+      padding: 14px 28px;
+
+      border-radius: 7px;
+
+      transition: .2s ease;
+
+      box-shadow:
+        0 8px 25px rgba(0,0,0,.30);
+    }
+
+
+    .start-button:hover {
+      background: #e0223f;
+
+      transform: translateY(-1px);
+    }
+
+
+    /* =========================================
+       WARNING / NOTE
+    ========================================= */
+
+    .risk-note {
+      max-width: 700px;
+
+      margin:
+        25px auto 0;
+
+      padding:
+        13px 16px;
+
+      text-align: center;
+
+      background:
+        rgba(18,23,33,.70);
+
+      border:
+        1px solid #1e2532;
+
+      border-radius: 9px;
+
+      color: #6b7280;
+
+      font-size: 11px;
+
+      line-height: 1.6;
+    }
+
+
+    /* =========================================
+       FOOTER
+    ========================================= */
+
+    footer {
+      width: 100%;
+
+      max-width: 1100px;
+
+      margin:
+        70px auto 0;
+
+      padding:
+        25px 20px 15px;
+
+      border-top:
+        1px solid #1f2937;
+    }
+
+
+    .footer-top {
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      gap: 20px;
+
+      margin-bottom: 25px;
+    }
+
+
+    .footer-brand {
+      display: flex;
+
+      align-items: center;
+
+      gap: 8px;
+    }
+
+
+    .footer-brand-icon {
+      background: #ff2a4b;
+
+      color: white;
+
+      font-weight: bold;
+
+      padding:
+        3px 6px;
+
+      border-radius: 4px;
+
+      font-size: 11px;
+    }
+
+
+    .footer-brand-name {
+      font-size: 14px;
+
+      font-weight: 800;
+
+      color: white;
+    }
+
+
+    .footer-links {
+      display: flex;
+
+      gap: 24px;
+    }
+
+
+    .footer-links a {
+      color: #9ca3af;
+
+      text-decoration: none;
+
+      font-size: 12px;
+
+      transition: .2s ease;
+    }
+
+
+    .footer-links a:hover {
+      color: white;
+    }
+
+
+    .system-time {
+      color: #9ca3af;
+
+      font-size: 12px;
+
+      display: flex;
+
+      align-items: center;
+
+      gap: 6px;
+
+      white-space: nowrap;
+    }
+
+
+    .system-dot {
+      width: 6px;
+      height: 6px;
+
+      border-radius: 50%;
+
+      background: #22c55e;
+    }
+
+
+    .copyright {
+      text-align: center;
+
+      color: #4b5563;
+
+      font-size: 11px;
+    }
+/* =========================================
+       TABLET
+    ========================================= */
+
+    @media (max-width: 900px) {
+
+      .navbar-inner {
+        padding:
+          13px 20px;
+      }
+
+
+      .desktop-menu {
+        gap: 18px;
+      }
+
+
+      .telegram-btn {
+        display: none;
+      }
+
+
+      .footer-top {
+        flex-wrap: wrap;
+      }
+
+    }
+
+
+    /* =========================================
+       MOBILE
+    ========================================= */
+
+    @media (max-width: 700px) {
+
+      body {
+        background-attachment: scroll;
+      }
+
+
+      .navbar-inner {
+        min-height: 65px;
+
+        padding:
+          11px 15px;
+      }
+
+
+      .brand-name {
+        font-size: 17px;
+      }
+
+
+      .brand-icon {
+        width: 34px;
+        height: 34px;
+
+        font-size: 18px;
+      }
+
+
+      .desktop-menu {
+        display: none;
+      }
+
+
+      .nav-actions .telegram-btn {
+        display: none;
+      }
+
+
+      .join-btn {
+        display: none;
+      }
+
+
+      .mobile-menu-btn {
+        display: flex;
+      }
+
+
+      .main-container {
+        padding-left: 12px;
+
+        padding-right: 12px;
+      }
+
+
+      .page-hero {
+        margin-top: 25px;
+
+        padding:
+          40px 15px;
+
+        border-radius: 15px;
+      }
+
+
+      .page-hero h1 {
+        font-size: 35px;
+      }
+
+
+      .page-hero p {
+        font-size: 15px;
+      }
+
+
+      .steps-section {
+        padding:
+          0 12px;
+
+        margin-top: 10px;
+      }
+
+
+      .step-card {
+        align-items: flex-start;
+
+        padding: 18px;
+
+        gap: 14px;
+      }
+
+
+      .step-number {
+        width: 48px;
+        min-width: 48px;
+
+        height: 48px;
+
+        font-size: 16px;
+      }
+
+
+      .step-title {
+        font-size: 16px;
+      }
+
+
+      .step-description {
+        font-size: 12px;
+      }
+
+
+      .start-button {
+        width: 100%;
+
+        max-width: 300px;
+      }
+
+
+      .footer-top {
+        flex-direction: column;
+
+        text-align: center;
+
+        gap: 18px;
+      }
+
+
+      .footer-links {
+        flex-wrap: wrap;
+
+        justify-content: center;
+
+        gap: 15px;
+      }
+
+
+      .system-time {
+        justify-content: center;
+      }
+}
+
+
+    /* =========================================
+       SMALL MOBILE
+    ========================================= */
+
+    @media (max-width: 400px) {
+
+      .brand-name {
+        font-size: 15px;
+      }
+
+
+      .brand-icon {
+        width: 31px;
+        height: 31px;
+      }
+
+
+      .page-hero h1 {
+        font-size: 29px;
+      }
+
+
+      .page-hero p {
+        font-size: 14px;
+      }
+
+
+      .step-card {
+        padding: 15px;
+      }
+
+
+      .step-number {
+        width: 43px;
+        min-width: 43px;
+
+        height: 43px;
+
+        font-size: 14px;
+      }
+
+
+      .step-title {
+        font-size: 15px;
+      }
+
+
+      .system-time {
+        font-size: 10px;
+      }
+
+    }
+
+  </style>
+</head>
+
+
+<body>
+  
+
+
+<!-- =========================================
+     NAVBAR
+========================================= -->
+
+<nav class="main-navbar">
+
+  <div class="navbar-inner">
+
+
+    <!-- BRAND -->
+
+    <a href="index.html" class="brand">
+
+      <div class="brand-icon">
+        Z
+      </div>
+
+      <span class="brand-name">
+        Z Star Trader
+      </span>
+
+    </a>
+
+
+    <!-- DESKTOP MENU -->
+
+    <div class="desktop-menu">
+
+      <a href="index.html">
+        Home
+      </a>
+
+      <a href="how-to-use.html" class="active">
+        How To Use
+      </a>
+
+      <a href="Dashboard.html">
+        Dashboard
+      </a>
+
+    </div>
+
+
+    <!-- ACTIONS -->
+
+    <div class="nav-actions">
+
+ <a
+  href="https://t.me/+_2L8xYYKwec4ZmU0"
+  target="_blank"
+  class="telegram-btn">
+  
+  <i class="fab fa-telegram"></i>
+  Telegram
+
+</a>
+      <a
+        href="https://t.me/+_2L8xYYKwec4ZmU0"
+        target="_blank"
+        class="join-btn"
+      >
+
+              Join now 
+
+
+      </a>
+
+
+      <!-- MOBILE BUTTON -->
+
+      <button
+        type="button"
+        class="mobile-menu-btn"
+        id="mobileMenuButton"
+        onclick="toggleMobileMenu()"
+      >
+
+        <i class="fas fa-bars"></i>
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- MOBILE MENU -->
+
+  <div
+    class="mobile-menu"
+    id="mobileMenu"
+  >
+
+    <a href="index.html">
+
+      <i class="fas fa-home"></i>
+
+      &nbsp; Home
+
+    </a>
+
+
+    <a href="how-to-use.html">
+
+      <i class="fas fa-circle-question"></i>
+
+      &nbsp; How To Use
+
+    </a>
+
+
+    <a href="Dashboard.html">
+
+      <i class="fas fa-chart-line"></i>
+
+      &nbsp; Dashboard
+
+    </a>
+
+
+    <a
+      href="https://t.me/+_2L8xYYKwec4ZmU0"
+      target="_blank"
+    >
+
+      <i class="fab fa-telegram"></i>
+
+      &nbsp; Telegram
+
+    </a>
+
+  </div>
+
+</nav>
+
+
+
+<!-- =========================================
+     MAIN
+========================================= -->
+
+<main class="main-container">
+
+
+  <!-- =========================================
+       PAGE HERO
+  ========================================= -->
+
+  <section class="page-hero">
+
+
+    <div class="getting-started">
+
+      <span class="live-dot"></span>
+
+      GETTING STARTED
+
+    </div>
+
+
+    <h1>
+
+      How To
+
+      <span class="text-accent">
+        Get Access
+      </span>
+
+    </h1>
+
+
+    <p>
+
+      Follow these simple steps to learn
+      how the platform works and access
+      the available dashboard features.
+
+    </p>
+
+  </section>
+
+
+
+  <!-- =========================================
+       STEPS
+  ========================================= -->
+
+  <section class="steps-section">
+
+    <div class="steps">
+
+
+      <!-- STEP 01 -->
+
+      <div class="card-bg step-card">
+
+        <div class="step-number">
+          01
+        </div>
+
+
+        <div class="step-content">
+
+          <h3 class="step-title">
+
+            <i class="fas fa-mouse-pointer"></i>
+
+            Click JOIN NOW
+
+          </h3>
+
+
+          <p class="step-description">
+
+            Click the JOIN NOW button to open
+            the Telegram community.
+
+          </p>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- STEP 02 -->
+
+      <div class="card-bg step-card">
+
+        <div class="step-number">
+          02
+        </div>
+
+
+        <div class="step-content">
+
+          <h3 class="step-title">
+
+            <i class="fas fa-user-plus"></i>
+
+            Join Group
+
+          </h3>
+
+
+          <p class="step-description">
+
+            Join the Telegram community to receive
+            platform updates and information.
+
+          </p>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- STEP 03 -->
+
+      <div class="card-bg step-card">
+
+        <div class="step-number">
+          03
+        </div>
+
+
+        <div class="step-content">
+
+          <h3 class="step-title">
+
+            <i class="fas fa-key"></i>
+
+            Get Your Access
+
+          </h3>
+
+
+          <p class="step-description">
+
+            Follow the instructions provided by the
+            platform to obtain your dashboard access.
+
+          </p>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- STEP 04 -->
+
+      <div class="card-bg step-card">
+
+        <div class="step-number">
+          04
+        </div>
+
+
+        <div class="step-content">
+
+          <h3 class="step-title">
+
+            <i class="fas fa-paper-plane"></i>
+
+            Contact Support
+
+          </h3>
+
+
+          <p class="step-description">
+
+            If you need help, contact the official
+            Telegram support channel.
+
+          </p>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- STEP 05 -->
+
+      <div class="card-bg step-card">
+
+        <div class="step-number">
+          05
+        </div>
+
+
+        <div class="step-content">
+
+          <h3 class="step-title">
+
+            <i class="fas fa-lock"></i>
+
+            Enter Access Password
+
+          </h3>
+
+
+          <p class="step-description">
+
+            Enter your valid access password on
+            the Dashboard page when requested.
+
+          </p>
+
+        </div>
+
+      </div>
+
+
+
+      <!-- STEP 06 -->
+
+      <div class="card-bg step-card">
+
+        <div class="step-number">
+          06
+        </div>
+
+
+        <div class="step-content">
+
+          <h3 class="step-title">
+
+            <i class="fas fa-chart-line"></i>
+
+            Open Dashboard
+
+          </h3>
+
+
+          <p class="step-description">
+
+            After successful verification, use the
+            Dashboard to view the available platform
+            information.
+
+          </p>
+
+        </div>
+
+      </div>
+
+
+    </div>
+
+
+
+    <!-- START NOW -->
+
+    <div class="start-area">
+
+      <a
+        href="https://t.me/+_2L8xYYKwec4ZmU0"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="start-button"
+      >
+
+        TELEGRAM
+
+        <i class="fab fa-telegram"></i>
+
+      </a>
+
+    </div>
+
+
+    <!-- NOTE -->
+
+    <div class="risk-note">
+
+      Trading involves risk. Information displayed on this
+      website is for informational and platform-reference
+      purposes only and does not guarantee financial results.
+
+    </div>
+
+  </section>
+
+</main>
+
+
+
+<!-- =========================================
+     FOOTER
+========================================= -->
+
+<footer>
+
+
+  <div class="footer-top">
+
+
+    <!-- FOOTER BRAND -->
+
+    <div class="footer-brand">
+
+      <div class="footer-brand-icon">
+        Z
+      </div>
+
+      <span class="footer-brand-name">
+        Z Star Trader
+      </span>
+
+    </div>
+
+
+    <!-- FOOTER LINKS -->
+
+    <div class="footer-links">
+
+      <a href="index.html">
+        Home
+      </a>
+
+      <a href="how-to-use.html">
+        How To Use
+      </a>
+
+      <a href="Dashboard.html">
+        Dashboard
+      </a>
+
+    </div>
+
+
+    <!-- SYSTEM TIME -->
+
+    <div class="system-time">
+
+      <span class="system-dot"></span>
+
+      SYS_TIME:
+
+      <span id="sysTime">
+        12:00:00 AM
+      </span>
+
+    </div>
+
+
+  </div>
+
+
+  <div class="copyright">
+
+    © 2026 Z Star Trader.
+    All rights reserved.
+    Trading involves risk.
+
+  </div>
+
+</footer>
+
+
+
+<!-- =========================================
+     FLOATING CHAT
+========================================= -->
+<script>
+
+
+/* =========================================
+   TELEGRAM
+========================================= */
+
+function openTelegram() {
+
+  window.open(
+    "https://t.me/ZOHAIB_BINARY_TRADER",
+    "_blank"
+  );
+
+}
+
+
+
+/* =========================================
+   MOBILE MENU
+========================================= */
+
+function toggleMobileMenu() {
+
+  const menu =
+    document.getElementById(
+      "mobileMenu"
+    );
+
+  const button =
+    document.getElementById(
+      "mobileMenuButton"
+    );
+
+
+  menu.classList.toggle("show");
+
+
+  if (
+    menu.classList.contains("show")
+  ) {
+
+    button.innerHTML =
+      '<i class="fas fa-times"></i>';
+
+  } else {
+
+    button.innerHTML =
+      '<i class="fas fa-bars"></i>';
+
+  }
+
+}
+
+
+
+/* =========================================
+   CLOSE MOBILE MENU AFTER LINK CLICK
+========================================= */
+
+document
+  .querySelectorAll(".mobile-menu a")
+  .forEach(function(link) {
+
+    link.addEventListener(
+      "click",
+      function() {
+
+        document
+          .getElementById("mobileMenu")
+          .classList.remove("show");
+
+
+        document
+          .getElementById("mobileMenuButton")
+          .innerHTML =
+            '<i class="fas fa-bars"></i>';
+
+      }
+    );
+
+  });
+
+
+
+/* =========================================
+   REAL TIME PAKISTAN CLOCK
+========================================= */
+
+function updateClock() {
+
+  const now =
+    new Date();
+
+
+  const options = {
+
+    timeZone:
+      "Asia/Karachi",
+
+    hour:
+      "2-digit",
+
+    minute:
+      "2-digit",
+
+    second:
+      "2-digit",
+
+    hour12:
+      true
+
+  };
+
+
+  const pakistanTime =
+    new Intl.DateTimeFormat(
+      "en-PK",
+      options
+    ).format(now);
+
+
+  document.getElementById(
+    "sysTime"
+  ).innerText =
+    pakistanTime;
+
+}
+
+
+updateClock();
+
+
+setInterval(
+  updateClock,
+  1000
+);
+
+
+
+/* =========================================
+   WINDOW RESIZE
+========================================= */
+
+window.addEventListener(
+  "resize",
+  function() {
+
+    if (
+      window.innerWidth > 700
+    ) {
+
+      document
+        .getElementById(
+          "mobileMenu"
+        )
+        .classList.remove(
+          "show"
+        );
+
+
+      document
+        .getElementById(
+          "mobileMenuButton"
+        )
+        .innerHTML =
+          '<i class="fas fa-bars"></i>';
+
+    }
+
+  }
+);
+
+document.addEventListener("contextmenu", function(e) {
+    e.preventDefault();
+});
+
+document.addEventListener("keydown", function(e) {
+    if (
+        e.key === "F12" ||
+        (e.ctrlKey && e.shiftKey && ["I", "J", "C"].includes(e.key.toUpperCase())) ||
+        (e.ctrlKey && e.key.toUpperCase() === "U")
+    ) {
+        e.preventDefault();
+        return false;
+    }
+});
+
+
+</script>
+
+</body>
+</html>
